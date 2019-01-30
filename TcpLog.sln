@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogServer", "LogServer\LogServer.vcxproj", "{7B0833DD-44D4-4AA1-9C38-314FE19ED1B8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogClient", "LogClient\LogClient.vcxproj", "{56B97018-34C4-4700-B244-40C28C276F86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B0833DD-44D4-4AA1-9C38-314FE19ED1B8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B0833DD-44D4-4AA1-9C38-314FE19ED1B8}.Debug|Win32.Build.0 = Debug|Win32
+		{7B0833DD-44D4-4AA1-9C38-314FE19ED1B8}.Release|Win32.ActiveCfg = Release|Win32
+		{7B0833DD-44D4-4AA1-9C38-314FE19ED1B8}.Release|Win32.Build.0 = Release|Win32
+		{56B97018-34C4-4700-B244-40C28C276F86}.Debug|Win32.ActiveCfg = Debug|Win32
+		{56B97018-34C4-4700-B244-40C28C276F86}.Debug|Win32.Build.0 = Debug|Win32
+		{56B97018-34C4-4700-B244-40C28C276F86}.Release|Win32.ActiveCfg = Release|Win32
+		{56B97018-34C4-4700-B244-40C28C276F86}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
