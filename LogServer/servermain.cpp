@@ -113,7 +113,7 @@ void SVR_OnInitDialog()
 	::SendMessage(g_hDlg, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_MAIN)));
 	SetDlgItemTextA(g_hDlg, IDC_PORT, "1104");
 	gwjListViewCreate(IID_IMyListViewW, (void**)&g_listview, NULL);
-	g_listview->Attach01(g_hDlg, IDC_LIST_LOG);
+	g_listview->Attach01(g_hDlg, IDC_LIST_LOG, LVS_EX_FULLROWSELECT);
 	g_listview->AppendColumn2W(L"level", 25, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"time", 100, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"app", 100, LVCFMT_LEFT);
