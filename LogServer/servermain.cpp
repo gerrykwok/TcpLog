@@ -114,6 +114,7 @@ void SVR_OnInitDialog()
 	SetDlgItemTextA(g_hDlg, IDC_PORT, "1104");
 	gwjListViewCreate(IID_IMyListViewW, (void**)&g_listview, NULL);
 	g_listview->Attach01(g_hDlg, IDC_LIST_LOG, LVS_EX_FULLROWSELECT);
+	g_listview->SetSelectedBkColor(RGB(154, 182, 205));
 	g_listview->AppendColumn2W(L"level", 25, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"time", 100, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"app", 100, LVCFMT_LEFT);
@@ -179,7 +180,7 @@ void SVR_OnStartStop()
 				if(buff.sizeValid >= 4)
 				{
 					int pkgSize = *((int*)buff.addr);
-					if(buff.sizeValid >= pkgSize+4)//¹»Ò»¸ö°üÁË
+					if(buff.sizeValid >= pkgSize+4)//å¤Ÿä¸€ä¸ªåŒ…äº†
 					{
 						SVR_LOG oneLog;
 						oneLog.level = *((char*)buff.addr + 4);

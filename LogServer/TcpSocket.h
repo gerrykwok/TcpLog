@@ -17,7 +17,7 @@ protected:
 	static DWORD WINAPI Thread_Accept(void* param);
 	static DWORD WINAPI Thread_Recv(void *param);
 	void onAccept();
-	void onRecv(SOCKET sock);
+	void onRecv(SOCKET sock, const char *ipport);
 private:
 	SOCKET m_socketListen;
 	ONDATAFUNC m_onData;

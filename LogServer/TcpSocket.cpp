@@ -87,18 +87,22 @@ typedef struct
 {
 	TcpSocket *m_pThis;
 	SOCKET m_socket;
+	char m_ip_port[1024];
 } THREAD_RECV_CONTEXT;
 
 DWORD TcpSocket::Thread_Recv(void *param)
 {
 	THREAD_RECV_CONTEXT *ctx = (THREAD_RECV_CONTEXT*)param;
-	ctx->m_pThis->onRecv(ctx->m_socket);
+	char ipport[1024];
+	strcpy(ipport, ctx->m_ip_port);
+	ctx->m_pThis->onRecv(ctx->m_socket, ipport);
 	return 0;
 }
 
 void TcpSocket::onAccept()
 {
 	int i;
+	char sz[1024];
 	std::vector<SOCKET> allSockConn;
 	SOCKET sockConn;
 	SOCKADDR_IN addrClt;
@@ -115,9 +119,16 @@ void TcpSocket::onAccept()
 		dbg_TRACEA("someone connect:%d.%d.%d.%d:%d(%d)\n",
 			addrClt.sin_addr.S_un.S_un_b.s_b1, addrClt.sin_addr.S_un.S_un_b.s_b2, addrClt.sin_addr.S_un.S_un_b.s_b3, addrClt.sin_addr.S_un.S_un_b.s_b4,
 			ntohs(addrClt.sin_port), addrClt.sin_port);
+		if(m_onLog != nullptr)
+		{
+			sprintf(sz, "someone connected:%d.%d.%d.%d:%d", addrClt.sin_addr.S_un.S_un_b.s_b1, addrClt.sin_addr.S_un.S_un_b.s_b2, addrClt.sin_addr.S_un.S_un_b.s_b3, addrClt.sin_addr.S_un.S_un_b.s_b4,
+				ntohs(addrClt.sin_port));
+			m_onLog(sz);
+		}
 		allSockConn.push_back(sockConn);
 		ctx.m_pThis = this;
 		ctx.m_socket = sockConn;
+		sprintf(ctx.m_ip_port, "%d.%d.%d.%d:%d", addrClt.sin_addr.S_un.S_un_b.s_b1, addrClt.sin_addr.S_un.S_un_b.s_b2, addrClt.sin_addr.S_un.S_un_b.s_b3, addrClt.sin_addr.S_un.S_un_b.s_b4, ntohs(addrClt.sin_port));
 		DWORD dwThread;
 		HANDLE hThread;
 		hThread = CreateThread(NULL, 0, Thread_Recv, &ctx, 0, &dwThread);
@@ -132,9 +143,10 @@ void TcpSocket::onAccept()
 		m_onLog("thread accept terminated");
 }
 
-void TcpSocket::onRecv(SOCKET sock)
+void TcpSocket::onRecv(SOCKET sock, const char *ipport)
 {
 	dbg_TRACEA("recv thread started\n");
+	char sz[1024];
 	int maxBuff = 4 * 1024 * 1024;
 	char *buff = new char[maxBuff];
 	int ret;
@@ -153,4 +165,9 @@ void TcpSocket::onRecv(SOCKET sock)
 	closesocket(sock);
 	delete[] buff;
 	dbg_TRACEA("recv thread terminated\n");
+	if(m_onLog != nullptr)
+	{
+		sprintf(sz, "someone disconnected:%s", ipport);
+		m_onLog(sz);
+	}
 }
