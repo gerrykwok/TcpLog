@@ -97,6 +97,16 @@ BOOL SVR_DlgProc(HWND hDlg, UINT uMsg, WPARAM wparam, LPARAM lparam)
 		case IDC_CLEAR:
 			SVR_OnClearLog();
 			break;
+		case IDC_TOPMOST:
+			if(IsDlgButtonChecked(hDlg, IDC_TOPMOST) == BST_CHECKED)
+			{
+				SetWindowPos(hDlg, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+			}
+			else
+			{
+				SetWindowPos(hDlg, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+			}
+			break;
 		default:break;
 		}
 		break;
