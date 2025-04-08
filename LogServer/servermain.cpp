@@ -3,8 +3,6 @@
 #include <map>
 #include <code/PC/DBG_func.h>
 #include <code/PC/MyListViewW.h>
-#pragma comment(lib, "ws2_32")
-#pragma comment(lib, "gwj_ui")
 #include "TcpSocket.h"
 #include "resource.h"
 
