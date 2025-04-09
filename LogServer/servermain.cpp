@@ -216,6 +216,12 @@ void SVR_OnStartStop()
 	}
 }
 
+static void SVR_PlaceCtrlLeftCenter(HWND hCtrl, int x, int y) {
+	RECT rt;
+	GetWindowRect(hCtrl, &rt);
+	SetWindowPos(hCtrl, NULL, x, y-(rt.bottom-rt.top)/2, 0, 0, SWP_NOSIZE|SWP_NOZORDER);
+}
+
 void SVR_OnSize()
 {
 	HWND hListView = g_listview->GetHWND();
@@ -225,6 +231,13 @@ void SVR_OnSize()
 	GetClientRect(g_hDlg, &rtDlg);
 	GetWindowRect(hListView, &rt);
 	pt.x = 10;
-	pt.y = 50;
+	pt.y = 40;
 	MoveWindow(hListView, pt.x, pt.y, rtDlg.right-rtDlg.left-pt.x-pt.x, rtDlg.bottom-rtDlg.top-pt.y-pt.x, TRUE);
+
+	int y = 20;
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STATIC_PORT), 10, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_PORT), 46, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STARTSTOP), 118, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_CLEAR), 210, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_TOPMOST), 300, y);
 }
