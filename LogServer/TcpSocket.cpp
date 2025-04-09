@@ -134,7 +134,7 @@ void TcpSocket::onAccept()
 		hThread = CreateThread(NULL, 0, Thread_Recv, &ctx, 0, &dwThread);
 		CloseHandle(hThread);
 	}
-	int n = allSockConn.size();
+	int n = (int)allSockConn.size();
 	for(i = 0; i < n; ++i)
 	{
 		closesocket(allSockConn[i]);
