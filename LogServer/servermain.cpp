@@ -61,6 +61,7 @@ void SVR_OnStartStop();
 void SVR_OnSize();
 void SVR_OnClearLog();
 void SVR_addLog(int level, const char *app, const char *tag, const char *text);
+double SVR_getSystemScale();
 
 int WINAPI WinMain( __in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd )
 {
@@ -228,16 +229,27 @@ void SVR_OnSize()
 	RECT rt;
 	POINT pt;
 	RECT rtDlg;
+	double scale = SVR_getSystemScale();
 	GetClientRect(g_hDlg, &rtDlg);
 	GetWindowRect(hListView, &rt);
-	pt.x = 10;
-	pt.y = 40;
+	pt.x = 10 * scale;
+	pt.y = 40 * scale;
 	MoveWindow(hListView, pt.x, pt.y, rtDlg.right-rtDlg.left-pt.x-pt.x, rtDlg.bottom-rtDlg.top-pt.y-pt.x, TRUE);
 
-	int y = 20;
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STATIC_PORT), 10, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_PORT), 46, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STARTSTOP), 118, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_CLEAR), 210, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_TOPMOST), 300, y);
+	int y = 20 * scale;
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STATIC_PORT), 10 * scale, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_PORT), 46 * scale, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STARTSTOP), 118 * scale, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_CLEAR), 210 * scale, y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_TOPMOST), 300 * scale, y);
+}
+
+double SVR_getSystemScale()
+{
+	//https://blog.csdn.net/wzxiaodu/article/details/122338649?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-122338649-blog-121206222.pc_relevant_multi_platform_whitelistv1&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-122338649-blog-121206222.pc_relevant_multi_platform_whitelistv1&utm_relevant_index=1
+	UINT dpi = GetDpiForSystem();// GetDpiForWindow(GetDesktopWindow());
+	UINT baseDpi = 96;
+	double scale = (double)dpi / baseDpi;
+
+	return scale;
 }
