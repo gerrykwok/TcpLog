@@ -129,6 +129,7 @@ void SVR_OnInitDialog()
 	g_listview->AppendColumn2W(L"app", 100, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"tag", 50, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"text", 500, LVCFMT_LEFT);
+	CheckDlgButton(g_hDlg, IDC_SCROLL_BOTTOM, BST_CHECKED);
 }
 
 void SVR_addLog(int level, const char *app, const char *tag, const char *text)
@@ -139,7 +140,7 @@ void SVR_addLog(int level, const char *app, const char *tag, const char *text)
 	swprintf_s(wsz, SVR_COUNTOF(wsz), L"%d-%02d-%02d,%02d:%02d:%02d.%03d", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
 
 	int iItem;
-	iItem =g_listview->AppendItemW(SVR_levelDesc[level]);
+	iItem = g_listview->AppendItemW(SVR_levelDesc[level]);
 
 	g_listview->SetLineColor(iItem, SVR_levelColor[level], SVR_levelColor[level]);
 	g_listview->SetLineTxFormat(iItem, DT_LEFT);
@@ -151,6 +152,11 @@ void SVR_addLog(int level, const char *app, const char *tag, const char *text)
 	g_listview->SetItemTextExW(iItem, 3, L"%s", wsz);
 	MultiByteToWideChar(CP_UTF8, 0, text, -1, wsz, SVR_COUNTOF(wsz));
 	g_listview->SetItemTextExW(iItem, 4, L"%s", wsz);
+
+	RECT rt;
+	if(IsDlgButtonChecked(g_hDlg, IDC_SCROLL_BOTTOM) == BST_CHECKED && g_listview->GetItemRect(0, &rt, LVIR_BOUNDS)) {
+		ListView_Scroll(g_listview->GetHWND(), 0, (g_listview->GetItemCount() + 1) * (rt.bottom - rt.top));
+	}
 }
 
 void SVR_OnClearLog()
@@ -232,16 +238,19 @@ void SVR_OnSize()
 	double scale = SVR_getSystemScale();
 	GetClientRect(g_hDlg, &rtDlg);
 	GetWindowRect(hListView, &rt);
-	pt.x = 10 * scale;
-	pt.y = 40 * scale;
+	pt.x = (LONG)(10 * scale);
+	pt.y = (LONG)(40 * scale);
 	MoveWindow(hListView, pt.x, pt.y, rtDlg.right-rtDlg.left-pt.x-pt.x, rtDlg.bottom-rtDlg.top-pt.y-pt.x, TRUE);
 
-	int y = 20 * scale;
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STATIC_PORT), 10 * scale, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_PORT), 46 * scale, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STARTSTOP), 118 * scale, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_CLEAR), 210 * scale, y);
-	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_TOPMOST), 300 * scale, y);
+	int y = (int)(20 * scale);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STATIC_PORT), (int)(10 * scale), y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_PORT), (int)(46 * scale), y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_STARTSTOP), (int)(118 * scale), y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_CLEAR), (int)(210 * scale), y);
+	SVR_PlaceCtrlLeftCenter(GetDlgItem(g_hDlg, IDC_TOPMOST), (int)(300 * scale), y);
+	HWND hWnd = GetDlgItem(g_hDlg, IDC_SCROLL_BOTTOM);
+	GetWindowRect(hWnd, &rt);
+	SVR_PlaceCtrlLeftCenter(hWnd, rtDlg.right - (rt.right - rt.left), y);
 }
 
 double SVR_getSystemScale()
