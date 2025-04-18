@@ -125,7 +125,7 @@ void SVR_OnInitDialog()
 	g_listview->Attach01(g_hDlg, IDC_LIST_LOG, LVS_EX_FULLROWSELECT);
 	g_listview->SetSelectedBkColor(RGB(154, 182, 205));
 	g_listview->AppendColumn2W(L"level", 25, LVCFMT_LEFT);
-	g_listview->AppendColumn2W(L"time", 100, LVCFMT_LEFT);
+	g_listview->AppendColumn2W(L"time", 150, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"app", 100, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"tag", 50, LVCFMT_LEFT);
 	g_listview->AppendColumn2W(L"text", 500, LVCFMT_LEFT);
