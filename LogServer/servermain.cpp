@@ -88,7 +88,7 @@ BOOL SVR_DlgProc(HWND hDlg, UINT uMsg, WPARAM wparam, LPARAM lparam)
 //			::EndDialog(hDlg, 0);
 			return TRUE;
 		case IDCANCEL:
-			::EndDialog(hDlg, 0);
+//			::EndDialog(hDlg, 0);
 			return TRUE;
 		case IDC_STARTSTOP:
 			SVR_OnStartStop();
