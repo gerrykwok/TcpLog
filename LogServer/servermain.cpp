@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////////////
 #include <windows.h>
 #include <map>
+#include <string>
 #include <code/PC/DBG_func.h>
 #include <code/PC/MyListViewW.h>
 #include "TcpSocket.h"
@@ -59,6 +60,7 @@ static BOOL SVR_DlgProc(HWND hDlg, UINT uMsg, WPARAM wparam, LPARAM lparam);
 void SVR_OnInitDialog();
 void SVR_OnStartStop();
 void SVR_OnSize();
+void SVR_OnNotify(NMHDR *pHDR);
 void SVR_OnClearLog();
 void SVR_addLog(int level, const char *app, const char *tag, const char *text);
 double SVR_getSystemScale();
@@ -111,6 +113,9 @@ BOOL SVR_DlgProc(HWND hDlg, UINT uMsg, WPARAM wparam, LPARAM lparam)
 		break;
 	case WM_SIZE:
 		SVR_OnSize();
+		break;
+	case WM_NOTIFY:
+		SVR_OnNotify((NMHDR*)lparam);
 		break;
 	default: break;
 	}
@@ -251,6 +256,51 @@ void SVR_OnSize()
 	HWND hWnd = GetDlgItem(g_hDlg, IDC_SCROLL_BOTTOM);
 	GetWindowRect(hWnd, &rt);
 	SVR_PlaceCtrlLeftCenter(hWnd, rtDlg.right - (rt.right - rt.left), y);
+}
+
+void SVR_OnNotify(NMHDR *pHDR) {
+	if(pHDR->hwndFrom == g_listview->GetHWND() && pHDR->code == LVN_KEYDOWN) {
+		NMLVKEYDOWN *pKeyDown = (NMLVKEYDOWN*)pHDR;
+		DWORD pos;
+		int i, j, iColStart, iColEnd;
+		std::wstring str;
+		wchar_t wsz[4096];
+		HGLOBAL hf;
+		LPWSTR lp;
+		auto pList = g_listview;
+		if(GetAsyncKeyState(VK_CONTROL)) switch(pKeyDown->wVKey)
+		{
+		case 'C'://复制选定的行
+//			dbg_TRACEA("copy the log\n");
+			pos = pList->GetFirstSelectedItemPosition();
+			iColStart = 0;
+			iColEnd = 5;
+			while(pos)
+			{
+				i = pList->GetNextSelectedItem(pos);
+				for(j = iColStart; j < iColEnd; ++j)
+				{
+					pList->GetItemTextW(i, j, wsz, sizeof(wsz)/sizeof(wsz[0]));
+					str += wsz;
+					if(j+1 < iColEnd)
+						str += L"  ";
+				}
+				if(pos)
+					str += L"\r\n";
+			}
+//			dbg_TRACEW(L"str=%s\n", str.c_str());
+			hf = GlobalAlloc(GMEM_MOVEABLE|GMEM_ZEROINIT, (str.length()+1) * sizeof(wchar_t));
+			lp = (LPWSTR)GlobalLock(hf);
+			memcpy(lp, str.c_str(), str.length()*sizeof(wchar_t));
+			GlobalUnlock(hf);
+			OpenClipboard(g_hDlg);
+			EmptyClipboard();
+			SetClipboardData(CF_UNICODETEXT, hf);
+			CloseClipboard();
+			break;
+		default: break;
+		}
+	}
 }
 
 double SVR_getSystemScale()
